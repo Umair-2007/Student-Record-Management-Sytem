@@ -1,0 +1,130 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: url('background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    color: white;
+}
+
+@keyframes fadeSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    animation: fadeSlideIn 0.8s ease-out forwards;
+    animation-delay: 0.1s;
+    opacity: 0;
+}
+
+.glass-form {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 30px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+    animation: fadeSlideIn 0.8s ease-out forwards;
+    animation-delay: 0.2s;
+    opacity: 0;
+}
+
+.glass-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #f0f0f0;
+}
+
+.glass-form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 10px;
+    outline: none;
+    font-size: 1rem;
+}
+
+.glass-form button {
+    width: 100%;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.glass-form button:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.back-link {
+    width: 91%;
+    height: 20px;
+    text-align: center;
+    display: inline-block;
+    margin-top: 15px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+    opacity: 0.8;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 10px;
+    padding: 8px 18px;
+    transition: background 0.3s ease, opacity 0.3s ease;
+    animation: fadeSlideIn 0.8s ease-out forwards;
+    animation-delay: 0.4s;
+    opacity: 0;
+}
+
+.back-link:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+@media (max-width: 600px) {
+    h1 {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+    }
+    .glass-form {
+        padding: 15px;
+        width: 98vw;
+        max-width: 100%;
+    }
+    .glass-form label,
+    .glass-form input,
+    .glass-form button {
+        font-size: 1rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .back-link {
+        width: 98vw;
+        font-size: 1rem;
+        padding: 8px 10px;
+    }
+}

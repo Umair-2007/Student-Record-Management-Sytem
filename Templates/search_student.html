@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Students</title>
+    <link rel="stylesheet" href="search.css">
+    <script src="search_student.js" defer></script>
+</head>
+<body>
+    <div class="container glass-effect">
+        <h1>Search Students</h1>
+        <form id="searchForm">
+            <label for="searchInput">Enter Name or Roll Number:</label>
+            <input type="text" id="searchInput" name="searchInput" placeholder="Type here..." required>
+            <button type="submit">Search</button>
+            <button type="button" onclick="window.location.href='index.html'">Back to Home</button>
+        </form>
+        <div id="searchResults" class="results-box glass-effect">
+        </div>
+    </div>
+</body>
+</html>

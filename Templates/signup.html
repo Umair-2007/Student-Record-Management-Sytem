@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Student Record Management System</title>
+    <link rel="stylesheet" href="signup.css">
+</head>
+<body>
+    <div class="glass-container">
+        <h1>Sign Up</h1>
+        <form id="signupForm">
+            <label for="signupUsername">Username:</label>
+            <input type="text" id="signupUsername" name="signupUsername" required>
+            <label for="signupPassword">Password:</label>
+            <input type="password" id="signupPassword" name="signupPassword" required>
+            <label for="signupConfirmPassword">Confirm Password:</label>
+            <input type="password" id="signupConfirmPassword" name="signupConfirmPassword" required>
+            <button type="submit" id="signupBtn">Sign Up</button>
+        </form>
+        <div id="signupMessage"></div>
+        <p>Already have an account? <a href="login.html">Login here</a></p>
+    </div>
+    <script src="signup.js"></script>
+</body>
+</html>

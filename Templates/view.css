@@ -1,0 +1,107 @@
+body {
+    font-family: Arial, sans-serif;
+    background: url('background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+}
+
+@keyframes fadeSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.container {
+    max-width: 1000px;
+    margin: 50px auto;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    color: white;
+    animation: fadeSlideIn 0.8s ease-out forwards;
+    animation-delay: 0.1s;
+    opacity: 0;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+    border-radius: 10px;
+    animation: fadeSlideIn 0.8s ease-out forwards;
+    animation-delay: 0.3s;
+    opacity: 0;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    backdrop-filter: blur(5px);
+}
+
+th {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+tr {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+tr:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-back {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 15px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+    animation: fadeSlideIn 0.8s ease-out forwards;
+    animation-delay: 0.5s;
+    opacity: 0;
+}
+
+.btn-back:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 10px;
+        margin: 10px auto;
+        max-width: 98vw;
+    }
+    h1 {
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+    }
+    table, th, td {
+        font-size: 0.95rem;
+        padding: 8px 6px;
+    }
+    .btn-back {
+        width: 98vw;
+        font-size: 1rem;
+        padding: 8px 10px;
+    }
+}

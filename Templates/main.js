@@ -1,10 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
-    fetch('/profile')
+    const token = localStorage.getItem('token');
+    if (token) {
+        fetch('/profile', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
         .then(response => {
             if (response.ok) {
                 return response.json();
             } else {
-                window.location.href = 'login.html';
+                logout(); // Token is invalid or expired
             }
         })
         .then(data => {
@@ -17,14 +23,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .catch(() => {
-            window.location.href = 'login.html';
+            logout();
         });
+    } else {
+        window.location.href = 'login.html';
+    }
 });
 
 function logout() {
-    fetch('/logout', {
-        method: 'POST'
-    }).then(() => {
-        window.location.href = 'login.html';
-    });
+    localStorage.removeItem('token');
+    window.location.href = 'login.html';
 }

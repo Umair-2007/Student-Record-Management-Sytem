@@ -13,7 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json().then(data => ({ status: response.status, body: data })))
         .then(res => {
-            if(res.status === 200) {
+            if(res.status === 200 && res.body.token) {
+                localStorage.setItem('token', res.body.token);
                 loginMessage.innerHTML = '<span style="color:green">Login successful! Redirecting...</span>';
                 setTimeout(() => { window.location.href = 'index.html'; }, 1000);
             } else {

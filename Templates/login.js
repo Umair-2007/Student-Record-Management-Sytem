@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault();
         const username = document.getElementById('loginUsername').value;
         const password = document.getElementById('loginPassword').value;
-        fetch('http://192.168.1.10:5001/login', {
+        fetch('https://localhost:5001/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password })
@@ -24,4 +24,8 @@ document.addEventListener('DOMContentLoaded', function() {
             loginMessage.innerHTML = '<span style="color:red">Server error. Please try again.</span>';
         });
     });
+
+    document.getElementById('googleLoginBtn').onclick = function() {
+        window.location.href = 'https://localhost:5001/auth/google';
+    };
 });

@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const rollNo = document.getElementById('rollNo').value;
         
         // First, fetch the student by roll number
-        fetch(`/students`)
+        fetch(`https://localhost:5001/students`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 };
                 
                 // Send the update request
-                return fetch(`/students/${student.id}`, {
+                return fetch(`https://localhost:5001/students/${student.id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'

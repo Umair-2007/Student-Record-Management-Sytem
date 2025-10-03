@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Student Record Management System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+    <div class="glass-container">
+        <h1>My Profile</h1>
+        <div class="profile-info">
+            <p><strong>Username:</strong> <span id="profileUsername">JohnDoe</span></p>
+            <p><strong>Email:</strong> <span id="profileEmail">johndoe@email.com</span></p>
+            <p><strong>Role:</strong> <span id="profileRole">Student</span></p>
+            <!-- Add more fields as needed -->
+        </div>
+        <button onclick="window.location.href='index.html'" class="back-btn">Back to Home</button>
+        <button id="deleteAccountBtn" class="delete-btn" style="margin-top:15px;">Delete My Account</button>
+    </div>
+    <script src="profile.js"></script>
+</body>
+</html>

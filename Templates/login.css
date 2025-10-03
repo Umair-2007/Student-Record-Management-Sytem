@@ -80,6 +80,24 @@ button:hover {
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
 
+.google-btn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 0.6rem 1.2rem;
+    background: #4285F4;
+    color: #fff;
+    border: none;
+    border-radius: 16px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.google-btn:hover {
+    background: #357ae8;
+}
+
 #loginMessage {
     text-align: center;
     margin-top: 1rem;
@@ -120,11 +138,23 @@ p {
     form button {
         padding: 0.6rem 1rem;
         margin-top: 10px;
+        width: 100%;
+        display: block;
     }
     #loginMessage {
         font-size: 1rem;
     }
     p {
         font-size: 0.95rem;
+    }
+    footer {
+        width: 100vw;
+        left: 0;
+        border-radius: 0;
+        padding: 0.7rem 0;
+        font-size: 0.95rem;
+        position: fixed;
+        bottom: 0;
+        margin-top: 0;
     }
 }

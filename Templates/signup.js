@@ -5,18 +5,28 @@ document.addEventListener('DOMContentLoaded', function() {
     signupForm.addEventListener('submit', function(event) {
         event.preventDefault();
         const username = document.getElementById('signupUsername').value;
+        const email = document.getElementById('signupEmail').value;
         const password = document.getElementById('signupPassword').value;
         const confirmPassword = document.getElementById('signupConfirmPassword').value;
         if(password !== confirmPassword) {
             signupMessage.innerHTML = '<span style="color:red">Passwords do not match.</span>';
             return;
         }
-        fetch('http://192.168.1.10:5001/signup', {
+        fetch('https://localhost:5001/signup', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
+            body: JSON.stringify({ username, email, password })
         })
-        .then(response => response.json().then(data => ({ status: response.status, body: data })))
+        .then(response => {
+            return response.text().then(text => {
+                try {
+                    const data = JSON.parse(text);
+                    return { status: response.status, body: data };
+                } catch (e) {
+                    return { status: response.status, body: { error: 'Server returned invalid response.' } };
+                }
+            });
+        })
         .then(res => {
             if(res.status === 201) {
                 signupMessage.innerHTML = '<span style="color:green">Signup successful! Redirecting to login...</span>';
@@ -26,7 +36,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .catch(() => {
-            signupMessage.innerHTML = '<span style="color:red">Server error. Please try again.</span>';
+            signupMessage.innerHTML = '<span style="color:red">Network/server error. Please try again.</span>';
         });
     });
+
+    document.getElementById('googleSignupBtn').onclick = function() {
+        window.location.href = 'https://localhost:5001/auth/google';
+    };
 });

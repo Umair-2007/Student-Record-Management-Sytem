@@ -10,7 +10,7 @@ function viewStudent() {
     tbody.innerHTML = "<tr><td colspan='6'>Loading students...</td></tr>";
 
     // Fetch students from the API
-    fetch('http://localhost:5001/students')
+    fetch('https://localhost:5001/students')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');

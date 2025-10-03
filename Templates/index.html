@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="profile-container">
+        <a href="profile.html" class="profile-link">My Profile</a>
+    </div>
     <h1>Welcome to the Student Record Management System</h1>
     <p>This system allows you to manage student records efficiently.</p>
     <nav>
@@ -41,5 +44,13 @@
         <p>&copy; 2025 Student Record Management System</p>
     </footer>
     <script src="main.js"></script>
+    <script>
+        document.getElementById('googleLoginBtn').onclick = function() {
+            window.location.href = 'https://localhost:5001/auth/google';
+        };
+        document.getElementById('googleSignupBtn').onclick = function() {
+            window.location.href = 'https://localhost:5001/auth/google';
+        };
+    </script>
 </body>
 </html>

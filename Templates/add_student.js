@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
             marks: document.getElementById('date_of_birth').value || null
         };
         
-        fetch('http://localhost:5001/students', {
+        fetch('https://localhost:5001/students', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -1,7 +1,30 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Removed the login/signup event listeners as per the instructions
+    fetch('/profile')
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                window.location.href = 'login.html';
+            }
+        })
+        .then(data => {
+            if (data) {
+                const logoutButton = document.createElement('button');
+                logoutButton.id = 'logoutBtn';
+                logoutButton.textContent = 'Logout';
+                logoutButton.onclick = logout;
+                document.body.appendChild(logoutButton);
+            }
+        })
+        .catch(() => {
+            window.location.href = 'login.html';
+        });
 });
 
 function logout() {
-    window.location.href = 'login.html';
+    fetch('/logout', {
+        method: 'POST'
+    }).then(() => {
+        window.location.href = 'login.html';
+    });
 }

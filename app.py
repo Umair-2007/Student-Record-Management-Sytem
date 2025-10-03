@@ -7,14 +7,17 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.exc import IntegrityError
 import traceback
 import os
+import jwt
+from functools import wraps
 
 app = Flask(__name__, template_folder='Templates', static_folder='Templates')
 app.secret_key = os.urandom(24) # Add a secret key for session
+app.config['SECRET_KEY'] = app.secret_key # Also use for JWT secret key
 # Configure session to be more secure and work with HTTPS
 # For development with self-signed certificates, we need to be more permissive
 app.config['SESSION_COOKIE_SECURE'] = False  # Allow cookies over HTTP for development
 app.config['SESSION_COOKIE_HTTPONLY'] = True  # Prevent JavaScript access to session cookie
-app.config['SESSION_COOKIE_SAMESITE'] = None  # Allow cross-site cookies for OAuth
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'  # Allow cross-site cookies for OAuth
 app.config['PERMANENT_SESSION_LIFETIME'] = 3600  # Session timeout in seconds (1 hour)
 
 # Make sessions permanent by default
@@ -24,6 +27,22 @@ def make_session_permanent():
 
 # Configure CORS to allow credentials
 CORS(app, resources={r"/*": {"origins": ["https://localhost:5001", "http://localhost:5001"]}}, supports_credentials=True)
+
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+        if 'Authorization' in request.headers:
+            token = request.headers['Authorization'].split(' ')[1]
+        if not token:
+            return jsonify({'message': 'Token is missing!'}), 401
+        try:
+            data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+            current_user = User.query.filter_by(username=data['username']).first()
+        except:
+            return jsonify({'message': 'Token is invalid!'}), 401
+        return f(current_user, *args, **kwargs)
+    return decorated
 
 # Google OAuth setup
 google_bp = make_google_blueprint(
@@ -151,8 +170,8 @@ def login():
     password = data.get('password')
     user = User.query.filter_by(username=username).first()
     if user and check_password_hash(user.password, password):
-        session['username'] = user.username  # Store username in session
-        return jsonify({'message': 'Login successful'}), 200
+        token = jwt.encode({'username': user.username, 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)}, app.config['SECRET_KEY'])
+        return jsonify({'token': token})
     return jsonify({'error': 'Invalid username or password'}), 401
 
 @app.route('/logout', methods=['POST'])
@@ -161,40 +180,23 @@ def logout():
     return jsonify({'message': 'Logout successful'}), 200
 
 @app.route('/profile', methods=['GET'])
-def profile():
-    username = session.get('username')
-    if not username:
-        return jsonify({'error': 'Not logged in'}), 401
-        
-    user = User.query.filter_by(username=username).first()
-    if not user:
-        return jsonify({'error': 'User not found'}), 404
-        
+@token_required
+def profile(current_user):
     return jsonify({
-        'username': user.username,
-        'email': user.email,
+        'username': current_user.username,
+        'email': current_user.email,
         'role': 'Admin'
     })
 
 @app.route('/delete_account', methods=['DELETE'])
-def delete_account():
-    username = session.get('username')
-    if not username:
-        print("Delete account error: Not logged in")
-        return jsonify({'error': 'Not logged in'}), 401
-    user = User.query.filter_by(username=username).first()
-    if not user:
-        print("Delete account error: User not found")
-        return jsonify({'error': 'User not found'}), 404
+@token_required
+def delete_account(current_user):
     try:
-        db.session.delete(user)
+        db.session.delete(current_user)
         db.session.commit()
-        session.pop('username', None)
-        print(f"User {username} deleted successfully.")
         return jsonify({'message': 'Account deleted successfully'})
     except Exception as e:
         db.session.rollback()
-        print(f"Delete account error: {type(e).__name__}: {e}")  # More detailed error
         return jsonify({'error': 'Server error: ' + str(e)}), 500
 
 @app.route('/auth/google')
@@ -230,9 +232,8 @@ def google_authorized():
             db.session.add(user)
             db.session.commit()
 
-        session.clear()
-        session['username'] = user.username
-        return redirect('/index.html')
+        token = jwt.encode({'username': user.username, 'exp': datetime.utcnow() + timedelta(hours=1)}, app.config['SECRET_KEY'])
+        return redirect(f'/handle_token.html#token={token}')
 
     except Exception as e:
         print(f"Exception in google_authorized: {str(e)}")

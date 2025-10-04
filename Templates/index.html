@@ -6,10 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Record Management System</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
 <body>
     <div class="profile-container">
         <a href="profile.html" class="profile-link">My Profile</a>
+        <div class="profile-info">
+            <div><strong>Username:</strong> <span id="profileUsername"></span></div>
+            <div><strong>Email:</strong> <span id="profileEmail"></span></div>
+            <div><strong>Role:</strong> <span id="profileRole"></span></div>
+        </div>
+    </div>
+    <div class="action-container">
+        <button id="aiAssistantBtn" class="ai-btn" type="button">AI Assistant</button>
+        <button id="analyticsBtn" class="ai-btn" type="button" style="margin-top:10px;">Student Analytics</button>
     </div>
     <h1>Welcome to the Student Record Management System</h1>
     <p>This system allows you to manage student records efficiently.</p>
@@ -45,12 +55,50 @@
     </footer>
     <script src="main.js"></script>
     <script>
-        document.getElementById('googleLoginBtn').onclick = function() {
-            window.location.href = 'https://localhost:5001/auth/google';
+        document.getElementById('aiAssistantBtn').onclick = function() {
+            document.getElementById('aiModal').style.display = 'flex';
         };
-        document.getElementById('googleSignupBtn').onclick = function() {
-            window.location.href = 'https://localhost:5001/auth/google';
+        document.getElementById('analyticsBtn').onclick = function() {
+            document.getElementById('analyticsModal').style.display = 'flex';
+            loadAnalytics();
         };
+
+        // Fetch and display profile info if token exists
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('token');
+            if (token) {
+                fetch('https://localhost:5001/profile', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('profileUsername').textContent = data.username || '';
+                    document.getElementById('profileEmail').textContent = data.email || '';
+                    document.getElementById('profileRole').textContent = data.role || '';
+                })
+                .catch(() => {
+                    document.getElementById('profileUsername').textContent = '';
+                    document.getElementById('profileEmail').textContent = '';
+                    document.getElementById('profileRole').textContent = '';
+                });
+            }
+        });
     </script>
+    <div id="aiModal" class="ai-modal" style="display:none;">
+        <div class="ai-modal-content">
+            <span class="ai-close" onclick="document.getElementById('aiModal').style.display='none'">&times;</span>
+            <h2>AI Assistant</h2>
+            <input type="text" id="aiInput" placeholder="Ask anything about students, marks, suggestions..." style="width:90%;padding:10px;">
+            <button onclick="askAI()" class="ai-btn">Ask</button>
+            <div id="aiResponse" style="margin-top:15px;color:#222;"></div>
+        </div>
+    </div>
+    <div id="analyticsModal" class="ai-modal" style="display:none;">
+        <div class="ai-modal-content">
+            <span class="ai-close" onclick="document.getElementById('analyticsModal').style.display='none'">&times;</span>
+            <h2>Student Analytics</h2>
+            <div id="analyticsContent" style="margin-top:15px;color:#222;"></div>
+        </div>
+    </div>
 </body>
 </html>

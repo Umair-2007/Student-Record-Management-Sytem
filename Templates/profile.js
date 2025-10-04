@@ -6,12 +6,21 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('profileEmail').textContent = 'Loading...';
     document.getElementById('profileRole').textContent = 'Loading...';
     
+    const token = localStorage.getItem('token');
+    if (!token) {
+        console.error('No token found in localStorage');
+        document.getElementById('profileUsername').textContent = 'Not logged in';
+        document.getElementById('profileEmail').textContent = 'Please log in to view your profile';
+        document.getElementById('profileRole').textContent = 'Unknown';
+        return;
+    }
+
     fetch('https://localhost:5001/profile', {
         method: 'GET',
-        credentials: 'include',
         headers: {
             'Accept': 'application/json',
-            'Cache-Control': 'no-cache'
+            'Cache-Control': 'no-cache',
+            'Authorization': `Bearer ${token}`
         }
     })
     .then(response => {
@@ -50,12 +59,15 @@ document.addEventListener('DOMContentLoaded', function() {
             if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
                 fetch('https://localhost:5001/delete_account', {
                     method: 'DELETE',
-                    credentials: 'include'
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
                 })
                 .then(response => response.json())
                 .then(data => {
                     if (data.message) {
                         alert('Account deleted successfully.');
+                        localStorage.removeItem('token');
                         window.location.href = 'signup.html';
                     } else {
                         alert(data.error || 'Failed to delete account.');

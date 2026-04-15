@@ -2,24 +2,30 @@ html, body {
     height: 100%;
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+body {
+    min-height: 100vh;
+    width: 100%;
+    color: white;
     background: url('background.jpg') no-repeat center center fixed;
     background-size: cover;
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-body {
-    color: white;
-}
-
+/* iOS-style app launch animation */
 .container {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.13);
+    border-radius: 22px;
     padding: 3rem 3rem;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    animation: startAnimation 0.7s ease-out;
+    backdrop-filter: blur(4px) saturate(180%);
+    -webkit-backdrop-filter: blur(4px) saturate(180%);
     width: 100%;
     max-width: 600px;
     box-sizing: border-box;
@@ -28,6 +34,29 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+    opacity: 0;
+    transform: scale(0.92) translateY(40px);
+    animation: iosAppLaunch 0.85s cubic-bezier(.23,1.12,.32,1) forwards;
+    animation-delay: 0.12s;
+}
+
+@keyframes iosAppLaunch {
+    0% {
+        opacity: 0;
+        transform: scale(0.92) translateY(40px);
+        filter: blur(2px);
+    }
+    60% {
+        opacity: 1;
+        transform: scale(1.04) translateY(-6px);
+        filter: blur(0.5px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        filter: blur(0);
+    }
 }
 
 @keyframes startAnimation {

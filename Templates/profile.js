@@ -53,6 +53,74 @@ document.addEventListener('DOMContentLoaded', function() {
         profileInfo.appendChild(errorMsg);
     });
 
+    // Edit Profile Modal Logic
+    const editBtn = document.getElementById('editProfileBtn');
+    const modal = document.getElementById('editProfileModal');
+    const closeModal = document.getElementById('closeEditModal');
+    const editForm = document.getElementById('editProfileForm');
+    const editMsg = document.getElementById('editProfileMsg');
+
+    if (editBtn && modal && closeModal && editForm) {
+        const modalContent = document.getElementById('editProfileModalContent');
+        editBtn.addEventListener('click', function() {
+            // Pre-fill form with current values
+            document.getElementById('editUsername').value = document.getElementById('profileUsername').textContent;
+            document.getElementById('editEmail').value = document.getElementById('profileEmail').textContent;
+            document.getElementById('editPassword').value = '';
+            editMsg.textContent = '';
+            modal.style.display = 'block';
+            // Trigger iOS pop animation
+            if (modalContent) {
+                modalContent.style.opacity = '0';
+                modalContent.style.animation = 'none';
+                // Force reflow
+                void modalContent.offsetWidth;
+                modalContent.style.animation = 'iosModalPop 0.6s cubic-bezier(.23,1.12,.32,1) forwards';
+            }
+        });
+        closeModal.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        };
+        editForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('editUsername').value.trim();
+            const email = document.getElementById('editEmail').value.trim();
+            const password = document.getElementById('editPassword').value;
+            fetch('https://localhost:5001/profile', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ username, email, password: password || undefined })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    editMsg.style.color = 'green';
+                    editMsg.textContent = data.message;
+                    // Update profile display
+                    document.getElementById('profileUsername').textContent = username;
+                    document.getElementById('profileEmail').textContent = email;
+                    setTimeout(() => { modal.style.display = 'none'; }, 1000);
+                } else {
+                    editMsg.style.color = 'red';
+                    editMsg.textContent = data.error || 'Failed to update profile.';
+                }
+            })
+            .catch(error => {
+                editMsg.style.color = 'red';
+                editMsg.textContent = 'Server error. Please try again.';
+            });
+        });
+    }
+
+    // Delete Account Logic
     const deleteBtn = document.getElementById('deleteAccountBtn');
     if (deleteBtn) {
         deleteBtn.addEventListener('click', function() {

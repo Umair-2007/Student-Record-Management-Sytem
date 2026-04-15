@@ -72,7 +72,7 @@ class Student(db.Model):
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), unique=True, nullable=False)
+    username = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(128), nullable=False)
 
@@ -155,9 +155,7 @@ def signup():
     # Ensure all fields are present
     if not username or not email or not password:
         return jsonify({'error': 'Username, email, and password required'}), 400
-    # Check for existing user
-    if User.query.filter_by(username=username).first():
-        return jsonify({'error': 'Username already exists'}), 400
+    # Check for existing user (only email must be unique)
     if User.query.filter_by(email=email).first():
         return jsonify({'error': 'Email already exists'}), 400
     # Hash password before storing
@@ -183,6 +181,8 @@ def logout():
     session.clear()
     return jsonify({'message': 'Logout successful'}), 200
 
+
+# Get profile
 @app.route('/profile', methods=['GET'])
 @token_required
 def profile(current_user):
@@ -191,6 +191,41 @@ def profile(current_user):
         'email': current_user.email,
         'role': 'Admin'
     })
+
+# Edit profile
+@app.route('/profile', methods=['PUT'])
+@token_required
+def edit_profile(current_user):
+    data = request.get_json()
+    updated = False
+    try:
+        # Update username
+        new_username = data.get('username')
+        if new_username and new_username != current_user.username:
+            if User.query.filter_by(username=new_username).first():
+                return jsonify({'error': 'Username already exists'}), 400
+            current_user.username = new_username
+            updated = True
+        # Update email
+        new_email = data.get('email')
+        if new_email and new_email != current_user.email:
+            if User.query.filter_by(email=new_email).first():
+                return jsonify({'error': 'Email already exists'}), 400
+            current_user.email = new_email
+            updated = True
+        # Update password
+        new_password = data.get('password')
+        if new_password:
+            current_user.password = generate_password_hash(new_password)
+            updated = True
+        if updated:
+            db.session.commit()
+            return jsonify({'message': 'Profile updated successfully'})
+        else:
+            return jsonify({'message': 'No changes made'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': 'Server error: ' + str(e)}), 500
 
 @app.route('/delete_account', methods=['DELETE'])
 @token_required
